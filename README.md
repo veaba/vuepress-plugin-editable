@@ -1,6 +1,6 @@
 # vuepress-plugin-editable
 
-Let's edit vuepress generate docs so easy!
+Let's editing vuepress generate docs so easy!
 
 Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article creation and revision process.
 
