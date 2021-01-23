@@ -1,9 +1,10 @@
 const Markdown = require("markdown-it");
+const editable = require('./index')
 const md = new Markdown({
   html: false,
 });
 
-md.use(plugin1);
+md.use(editable);
 const result = md.render(
   `
 ---
@@ -255,20 +256,6 @@ It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.
 console.log("md=>", md.render.rules);
 
 console.log("result=>", result);
-
-function plugin1(md, options) {
-  function handler({ tokens }) {
-    for (let item of tokens) {
-      console.log("item===>", item);
-      if (item.nesting !== -1) {
-        // TODO
-        item.attrs = [["data-x", "d"]];
-      }
-    }
-  }
-  md.core.ruler.before("linkify", "editable", handler);
-}
-
 /**
  * @TODO 环境检测
  *
@@ -283,7 +270,7 @@ function checkEnv() {}
 function isGitOk() {}
 
 /**
- * 
+ *
  *'inline',
   'block',
   'core',
@@ -295,7 +282,7 @@ function isGitOk() {}
   'utils',
   'helpers',
   'options'
- * 
+ *
 Token#attrs
  Html attributes. Format: [ [ name1, value1 ], [ name2, value2 ] ]
  */
