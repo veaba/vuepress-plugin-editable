@@ -113,8 +113,9 @@ export default {
       if (!repoPrefix || !repoPrefix.length) {
         console.warn("Warning: You have not set the repo url");
       }
-
-      const sourcePath = repoPrefix + this.$page.relativePath;
+      // const repoBranchName = "main"; // TODO 需要设置
+      const sourcePath =
+        repoPrefix + "/" + repoBranchName + this.$page.remoteRelativePath;
 
       const node = document.querySelector(".focus-editable");
       const menuNode = document.querySelector(".editable-menu");
@@ -124,13 +125,19 @@ export default {
 
       console.log("PR===>", event.target);
       console.log("发起PR ==>", {
-        sourcePath,
+        repoPrefix,
+        remoteRelativePath: this.$page.remoteRelativePath,
         content,
         line,
       });
+      // TODO 有2种路径
+      // 1. raw
+      // 2. blob 路径
+      // TODO 此处缺少设置主要分支
       bus.$emit("showReview", {
         status: true,
-        sourcePath,
+        repoPrefix,
+        remoteRelativePath: this.$page.remoteRelativePath,
         oldContent: this.preNodeContent,
         line,
         content,
@@ -140,5 +147,13 @@ export default {
     reloadPage(event) {
       location.reload();
     },
+
+    /**
+     * 判断是否是纯文本
+     * @TODO 纯文本，直接在当前行 可发起 PR
+     * @TODO 非纯文本，需要进一步打开控制台来手动编辑
+     * @return {boolean}
+     */
+    isPlainText() {},
   },
 };
