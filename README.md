@@ -10,6 +10,24 @@ You don't even need to open vscode, you just find a mistake while reading the do
 
 This will lower the threshold for developers to participate in open source documentation maintenance.
 
+## Usage
+
+1. Double-click on the vuepress generated content.
+
+2. OAuth github account and PR to repo's source file.
+
+## Features
+
+TODO
+
+- TODO: vuepress ecosystem
+
+- TODO: vitepress ecosystem
+
+- 当行提交 PR
+
+- 未处理当 存在 a 标签时候等其他情况，假设现在是 纯文本
+
 ## Design
 
 ### Resolution
@@ -46,29 +64,11 @@ This will lower the threshold for developers to participate in open source docum
 ### API Design
 
 - 指定父级包含标签
-- 指定web 站点对应的repo，以及正则匹配的地址
+- 指定 web 站点对应的 repo，以及正则匹配的地址
 - 发起请求之前校验提示
 - 双英文对照
-- 因为 vuepress 内含有一些 vue 组件，所以不能直接纯 HTML 解析为 markdown 来创建PR
+- 因为 vuepress 内含有一些 vue 组件，所以不能直接纯 HTML 解析为 markdown 来创建 PR
 - 埋点行为： line 数
-
-## Precondition
-
-## Usage
-
-1. Double-click on the vuepress generated content.
-
-2. OAuth github account and PR to repo's source file.
-
-## Features
-
-TODO
-
-- TODO: vuepress ecosystem
-
-- TODO: vitepress ecosystem
-
-- TODO: Most websites based on markdown it rendering
 
 ## Reference
 

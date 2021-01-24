@@ -1,0 +1,22 @@
+.focus-editable {
+  position: relative;
+}
+.focus-editable,
+.focus-editable:focus {
+  border: 1px solid #3eaf7c;
+  outline: 0;
+  padding: 0 2px;
+}
+
+.editable-menu {
+  position: absolute;
+  right: 0;
+  top: -30px;
+}
+.editable-menu span {
+  padding: 0 4px;
+  color: tan;
+}
+span.no-need-close  {
+  cursor: pointer;
+}
