@@ -6,21 +6,30 @@
       'z-index': this.eventData.status ? 0 : -1,
     }"
   >
-    <div class="editable-review-code">
-      <div class="editable-origin-code editable-review-body">
-        <p>
-          {{ eventData.oldContent }}
-        </p>
-      </div>
+    <div class="editable-review-warp">
+      <div class="editable-review-code">
+        <div class="editable-origin-code editable-review-body">
+          <h3>old content</h3>
+          <p>
+            {{ eventData.oldContent }}
+          </p>
+        </div>
 
-      <!--
+        <!--
         TODO: get source markdown file view, like setting english origin version repo  
         <div class="edittable-source-code"></div>
         -->
-      <div class="editable-new-code editable-review-body">
-        <p>
-          {{ eventData.content }}
-        </p>
+        <div class="editable-new-code editable-review-body">
+          <h3>new content</h3>
+          <p>
+            {{ eventData.content }}
+          </p>
+        </div>
+      </div>
+
+      <div class="editable-review-btn">
+        <button>应用</button>
+        <button @click="closeModal">关闭</button>
       </div>
     </div>
   </div>
@@ -44,7 +53,11 @@ export default {
       },
     };
   },
-  methods: {},
+  methods: {
+    closeModal() {
+      this.eventData.status = false;
+    },
+  },
 };
 </script>
 

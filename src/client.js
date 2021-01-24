@@ -5,7 +5,7 @@ export default {
     return {
       preLine: null,
       preNode: null,
-      currentNode: null, // TODO 当前的
+      preNodeContent: null, // current old content
       // TODO 通过本插件提交后有记录
       // pendingPRData:[]
     };
@@ -23,6 +23,11 @@ export default {
         // TODO 这里的content 或许需要转换为 markdown 处理
         this.preLine = currentLine;
         this.preNode = event.target;
+        // TODO temp handler 实际上这种处理方式欠妥
+        this.preNodeContent = event.target.innerHTML.replace(
+          /<strong(.+?)strong>/g,
+          ""
+        );
         //
       }
     };
@@ -126,7 +131,7 @@ export default {
       bus.$emit("showReview", {
         status: true,
         sourcePath,
-        oldContent: this.preNode.innerHTML,
+        oldContent: this.preNodeContent,
         line,
         content,
       });
