@@ -1,10 +1,11 @@
 import "./style.css";
-
+import bus from "./eventBus";
 export default {
   data() {
     return {
       preLine: null,
       preNode: null,
+      currentNode: null, // TODO 当前的
       // TODO 通过本插件提交后有记录
       // pendingPRData:[]
     };
@@ -22,6 +23,7 @@ export default {
         // TODO 这里的content 或许需要转换为 markdown 处理
         this.preLine = currentLine;
         this.preNode = event.target;
+        //
       }
     };
 
@@ -121,7 +123,14 @@ export default {
         content,
         line,
       });
-      this.reloadPage();
+      bus.$emit("showReview", {
+        status: true,
+        sourcePath,
+        oldContent: this.preNode.innerHTML,
+        line,
+        content,
+      });
+      // this.reloadPage();
     },
     reloadPage(event) {
       location.reload();

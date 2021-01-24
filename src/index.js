@@ -10,7 +10,11 @@ module.exports = (options, ctx) => {
       const cwdLen = _context.cwd.length;
       $page.remoteRelativePath = _filePath.substr(cwdLen).replace(/\\/g, "/");
     },
-    // enhanceAppFiles: require('./client.js')
+    enhanceAppFiles: [resolve(__dirname, "enhanceAppFiles.js")],
+    globalUIComponents: "EditableReview",
+    define:{
+      CAN_REVIEW:options.canReview
+    },
     clientRootMixin: resolve(__dirname, "client.js"),
   };
 };
