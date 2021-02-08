@@ -1,19 +1,23 @@
 import "./style.css";
 import bus from "./eventBus";
+import {
+  appDomain,
+  githubOAuthUrl,
+  updatePRAPI,
+  getContetAPI,
+  fetchOps,
+} from "./config";
 export default {
   data() {
     return {
       preLine: null,
       preNode: null,
       preNodeContent: null, // current old content
+      isPlainTextStatus: false,
       // TODO 通过本插件提交后有记录
-      // pendingPRData:[]
-      // TODO 后期处理为可配置的地址
-      githubOAuthUrl:
-        "https://github.com/login/oauth/authorize?client_id=Iv1.f8c5b24e304d03c9&amp;redirect_uri=http://127.0.0.1:8081/api/redirect/github",
-      updatePRAPI: "http://127.0.0.1:8081/api/content/update",
     };
   },
+  // TODO 删除后就丢失了 text node 无法再输入了
   mounted() {
     const targetNode = document.querySelector("body");
     let isEditable = null;
@@ -23,8 +27,13 @@ export default {
         isEditable = event.target.getAttribute("contenteditable");
 
         let oAuth = "Github OAuth";
+        event.target.classList.add("focus-editable");
+
         if (!this.isOAuthStatus()) {
           this.createMenu(event, { oAuth });
+          if (!this.isPlainText(event.target)) {
+            event.target.classList.add("no-edit");
+          }
         } else {
           if (this.isPlainText(event.target)) {
             //  plain text
@@ -32,18 +41,19 @@ export default {
               apply: "应用",
               restore: "还原",
             });
+            this.listenerInput(event);
+            //
+            event.target.setAttribute("contenteditable", true);
           } else {
             //  complex text
             this.createMenu(event, {
               update: "修改",
               restore: "还原",
             });
+            event.target.classList.add("no-edit");
           }
         }
 
-        event.target.setAttribute("contenteditable", true);
-        event.target.classList.add("focus-editable");
-        // TODO 这里的 content 或许需要转换为 markdown 处理
         this.preLine = currentLine;
         this.preNode = event.target;
         // TODO temp handler 实际上这种处理方式欠妥
@@ -85,6 +95,7 @@ export default {
       ) {
         this.preNode.removeAttribute("contenteditable");
         this.preNode.classList.remove("focus-editable");
+        this.preNode.classList.remove("no-edit");
         this.removeMenu();
       }
       this.bindMenuEvent(event);
@@ -99,6 +110,8 @@ export default {
      }
      */
     createMenu(event, btnWords) {
+      this.removeMenu();
+
       const parenNode = document.createElement("strong");
       parenNode.classList.add("editable-menu");
       parenNode.classList.add("no-need-close");
@@ -111,7 +124,7 @@ export default {
           childNode = document.createElement("span");
         } else {
           childNode = document.createElement("a");
-          childNode.href = this.githubOAuthUrl + "?reference=" + location.href;
+          childNode.href = githubOAuthUrl + "?reference=" + location.href;
         }
         childNode.innerHTML = btnWords[key];
         childNode.setAttribute("contenteditable", false);
@@ -161,36 +174,17 @@ export default {
       node.removeChild(menuNode);
       const content = node.innerHTML;
       const line = node.getAttribute("data-editable-line");
-
-      console.log("PR===>", event.target);
-      console.log("发起PR ==>", {
-        repoPrefix,
-        remoteRelativePath: this.$page.remoteRelativePath,
-        content,
-        line,
-      });
-      // -----------------------------
-      if (this.isPlainText(event.target)) {
-        console.log("single=>");
-        const { owner, repo } = this.getOwnerRepo(repoPrefix);
+      const { owner, repo } = this.getOwnerRepo(repoPrefix);
+      if (this.isPlainTextStatus) {
         this.postSinglePR(
           owner,
           repo,
-          this.$page.remoteRelativePath, // 可能多余斜杠问题
+          this.$page.remoteRelativePath,
           content,
           line
         );
       } else {
-        console.log("todo mult");
-
-        bus.$emit("showReview", {
-          status: true,
-          repoPrefix,
-          remoteRelativePath: this.$page.remoteRelativePath,
-          oldContent: this.preNodeContent,
-          line,
-          content,
-        });
+        this.getOriginContent(owner, repo, this.$page.remoteRelativePath);
       }
     },
     /**
@@ -198,7 +192,7 @@ export default {
      */
     postSinglePR(owner, repo, path, content, line) {
       console.log("arguments=>", arguments);
-      fetch(this.updatePRAPI, {
+      fetch(updatePRAPI, {
         body: JSON.stringify({
           owner,
           repo,
@@ -206,39 +200,14 @@ export default {
           content,
           line: Number(line),
         }),
-        mode: "cors",
         method: "POST",
-        headers: new Headers({
-          AccessToken: sessionStorage.githubOAuthAccessToken,
-          "Content-Type": "Application/json",
-        }),
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        redirect: "follow", // manual, *follow, error
-        referrer: "no-referrer", // *client, no-referrer
+        ...fetchOps,
       })
         .then((res) => {
           return res.json();
         })
         .then((data) => {
-          console.log("data=>", data);
-          const { code, message } = data || {};
-          switch (code) {
-            case 0:
-              alert(
-                "success! see =>" + "https://github.com/" + owner + "/" + repo
-              );
-              break;
-            case 401:
-              sessionStorage.removeItem("githubOAuthAccessToken");
-              location.href = this.$route.path;
-              console.warn("access token 失效", message);
-              break;
-            default:
-              break;
-          }
-        })
-        .catch((err) => {
-          console.log("err=>", err);
+          this.respHandler(data);
         });
     },
     // this.reloadPage();
@@ -266,21 +235,83 @@ export default {
      * @return {boolean}
      */
     isPlainText(node) {
-      if (node.children.length) return false;
-      else return true;
+      if (!node.children.length) {
+        this.isPlainTextStatus = true;
+        return true;
+      } else {
+        this.isPlainTextStatus = false;
+        return false;
+      }
+    },
+
+    /**
+     * listener contenteditable input
+     * contenteditable 里的内容被清空的行为导致丢失 textElement
+     * 此举为了不丢失 contenteditbale 特性而追加的
+     */
+    listenerInput(event) {
+      event.target.addEventListener("input", (inputEvent) => {
+        const firstTextNode = inputEvent.target.childNodes[0];
+        if (firstTextNode.nodeName !== "#text") {
+          const emptyTextNode = document.createTextNode(
+            "Please input something..."
+          );
+          inputEvent.target.insertBefore(emptyTextNode, firstTextNode);
+        }
+      });
+    },
+    /**
+     * get origin source file content
+     */
+    getOriginContent(owner, repo, path) {
+      fetch(
+        getContetAPI + "?owner=" + owner + "&repo=" + repo + "&path=" + path,
+        {
+          method: "GET",
+          ...fetchOps,
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data=>", data);
+          if (data.code === 0) {
+            bus.$emit("showReview", {
+              status: true,
+              owner,
+              repo,
+              path,
+              content: data.data,
+            });
+          } else {
+            // this.respHandler(data);
+          }
+        });
+    },
+    respHandler(data = {}) {
+      if (data.code === 0) {
+        alert("success! see: " + "https://github.com/" + owner + "/" + repo);
+      } else {
+        sessionStorage.removeItem("githubOAuthAccessToken");
+        location.href = this.$route.path;
+        console.warn(data);
+      }
     },
     /*
      * 判断是否授权过，即检查本地是否存储 access token
      * @return  {boolean}
      */
     isOAuthStatus() {
-      if (
-        sessionStorage.githubOAuthAccessToken &&
-        sessionStorage.githubOAuthAccessToken.length === 40
-      ) {
-        return true;
-      } else {
+      if (!this.$route.query.accessToken) {
         return false;
+      } else {
+        if (
+          sessionStorage.githubOAuthAccessToken &&
+          sessionStorage.githubOAuthAccessToken.length === 40
+        ) {
+          return true;
+        } else {
+          return false;
+        }
       }
     },
   },

@@ -2,14 +2,10 @@
 module.exports = (md, ctx) => {
   function setLine({ tokens = [] }) {
     // TODO 这里的行数不准确
-    console.log("tokens length=>", tokens.length);
     for (let i = 0; i < tokens.length; i++) {
       const item = tokens[i];
-      console.log("item=>", i, item);
       if (item.nesting !== -1 && item.block === true) {
-        item.attrs = [["data-editable-line", item.map ? item.map[1] : i + 1]];
-        // 1. 锁定到第几行
-        // 2. 再根据content 查找
+        item.attrs = [["data-editable-line", item.map ? item.map[0] : i + 1]];
       }
     }
   }

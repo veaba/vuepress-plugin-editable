@@ -8,6 +8,9 @@
   padding: 0 2px;
 }
 
+.focus-editable.no-edit {
+  border-style: dotted;
+}
 .editable-menu {
   position: absolute;
   right: 0;
@@ -20,7 +23,8 @@
 
 .editable-review-warp {
   position: relative;
-  width: 100%;
+  width: 1280px;
+  margin: 0 auto;
   height: 100%;
   box-sizing: border-box;
   padding: 100px;
@@ -52,10 +56,16 @@
 
 .editable-review-body {
   position: relative;
-  float: left;
-  width: 50%;
+  /* float: left;
+  width: 50%; */
+  margin: 0 auto;
   padding: 20px;
   height: 100%;
   box-sizing: border-box;
   min-height: 200px;
+}
+
+.editable-new-content {
+  border: 1px solid #ddd;
+  padding: 10px;
 }

@@ -18,23 +18,15 @@ This will lower the threshold for developers to participate in open source docum
 
 ## Features
 
-TODO
-
 - TODO: vuepress ecosystem
 
 - TODO: vitepress ecosystem
 
-- 当行提交 PR
+- plain text mode: HTML setting `contenteditable:true` redirect pull request.
 
-- 未处理当 存在 a 标签时候等其他情况，假设现在是 纯文本
+- TODO: complex text mode: diff origin source file content.
 
-- TODO: 由于渲染逻辑较为复杂，所以这里不好直接应用 `content` 作为新更改的数据，而是根据 app 重新拉取过来
-
-- TODO： 模式1 纯文本。不含有其他子节点的情况，可直接修改 `contenteditable:true` 直接发起
-
-- TODO:  模式2，非纯文本后的修改，将拉取原始代码来修改。
-
-
+- TODO: success alert ui
 
 ## Design
 
@@ -61,7 +53,9 @@ TODO
 - 方案 3：PR 的过程交由 特别的 OAuth-app 来完成，假设 2 点需要的情况下
   - 这需要额外的服务端开发能力 + 服务器
 
-### Server: go land (maybe can use node.js)
+### Server: go lang
+
+- [Private: veaba-bot](https://github.com/veaba/veaba-bot)
 
 ### Client:
 
