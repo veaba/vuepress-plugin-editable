@@ -7,7 +7,7 @@ export const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_i
 export const fetchOps = {
   mode: "cors",
   headers: new Headers({
-    AccessToken: sessionStorage.githubOAuthAccessToken,
+    "Access-Token": sessionStorage.githubOAuthAccessToken,
     "Content-Type": "Application/json",
   }),
   cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached

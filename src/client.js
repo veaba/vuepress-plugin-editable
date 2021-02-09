@@ -14,6 +14,7 @@ export default {
       preNode: null,
       preNodeContent: null, // current old content
       isPlainTextStatus: false,
+      fetchOps: fetchOps,
       // TODO 通过本插件提交后有记录
     };
   },
@@ -76,10 +77,7 @@ export default {
   methods: {
     saveAccessToken() {
       const accessToken = this.$route.query.accessToken;
-      if (
-        this.$route.query.accessToken &&
-        !sessionStorage.githubOAuthAccessToken
-      ) {
+      if (this.$route.query.accessToken) {
         sessionStorage.githubOAuthAccessToken = accessToken;
       }
     },
@@ -201,7 +199,7 @@ export default {
           line: Number(line),
         }),
         method: "POST",
-        ...fetchOps,
+        ...this.fetchOps,
       })
         .then((res) => {
           return res.json();

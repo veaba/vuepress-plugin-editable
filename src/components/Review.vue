@@ -37,7 +37,13 @@
             </a>
           </p>
           <!---TODO: add line index feature-->
-          <pre class="editable-new-content" contenteditable="true">
+          <pre
+            class="editable-new-content"
+            contenteditable="true"
+            @input="onChange"
+            @focus="onFocus"
+            @blur="onBlur"
+          >
             <code>
               <!-- TODO: contenteditable 与 data 绑定-->
             {{ eventData.content }}
@@ -70,20 +76,42 @@ export default {
     return {
       eventData: {
         content:
-          "﻿\n## 使用插件\n\n在使用 `createApp()` 初始化 Vue 应用程序后，你可以通过调用 `use()` 方法将插件添加到你的应用程序中。\n\n我们将使用在[编写插件](#编写插件)部分中创建的 `i18nPlugin` 进行演示。\n\n`use()` 方法有两个参数。第一个是要安装的插件，在这种情况下为 `i18nPlugin`。\n\n它还会自动阻止你多次使用同一插件，因此在同一插件上多次调用只会安装一次该插件。\n\n第二个参数是可选的，并且取决于每个特定的插件。在演示 `i18nPlugin` 的情况下，它是带有转换后的字符串的对象。\n",
+          "\n## 使用插件\n\n在使用 `createApp()` 初始化 Vue 应用程序后，你可以通过调用 `use()` 方法将插件添加到你的应用程序中。\n\n我们将使用在[编写插件](#编写插件)部分中创建的 `i18nPlugin` 进行演示。\n\n`use()` 方法有两个参数。第一个是要安装的插件，在这种情况下为 `i18nPlugin`。\n\n它还会自动阻止你多次使用同一插件，因此在同一插件上多次调用只会安装一次该插件。\n\n第二个参数是可选的，并且取决于每个特定的插件。在演示 `i18nPlugin` 的情况下，它是带有转换后的字符串的对象。\n",
         status: false,
       },
       disabled: false,
+      fetchOps: fetchOps,
+      tempContent: "",
     };
   },
   methods: {
     closeModal() {
       this.eventData.status = false;
     },
+    /**
+     * contenteditable input change
+     */
+    onChange(event) {
+      console.log("event=>", event.target.textContent);
+      window.x = event;
+      // this.$set(this.eventData, "content", event.target.innerText);
+      setTimeout(() => {
+        this.tempContent = event.target.innerText;
+      }, 200);
+    },
+    // bug:
+    onFocus() {
+      console.log("focus=>");
+      this.tempContent = this.eventData.content;
+    },
+    onBlur() {
+      console.log("blur=>");
+    },
     onApplyPullRequest() {
       this.disabled = true;
-      fetch('updatePRAPI', {
-      // fetch(updatePRAPI, {
+      // return;
+      // fetch("updatePRAPI", {
+      fetch(updatePRAPI, {
         body: JSON.stringify({
           owner: this.eventData.owner,
           repo: this.eventData.repo,
@@ -91,14 +119,15 @@ export default {
           content: this.eventData.content,
         }),
         method: "POST",
-        ...fetchOps,
+        ...this.fetchOps,
       })
         .then((res) => res.json())
         .then((data) => {
           this.disabled = false;
           if (data.code === 0) {
+            alert("success see: htts://github.com/" + owner + "/" + repo);
           } else {
-            // todo
+            console.warn(data);
           }
         });
     },
