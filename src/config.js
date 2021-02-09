@@ -6,10 +6,6 @@ export const getContetAPI = appDomain + "api/content/get";
 export const githubOAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${appDomain}${redirectAPI}`;
 export const fetchOps = {
   mode: "cors",
-  headers: new Headers({
-    "Access-Token": sessionStorage.githubOAuthAccessToken,
-    "Content-Type": "Application/json",
-  }),
   cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
   redirect: "follow", // manual, *follow, error
   referrer: "no-referrer", // *client, no-referrer

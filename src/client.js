@@ -14,7 +14,6 @@ export default {
       preNode: null,
       preNodeContent: null, // current old content
       isPlainTextStatus: false,
-      fetchOps: fetchOps,
       // TODO 通过本插件提交后有记录
     };
   },
@@ -267,6 +266,10 @@ export default {
         {
           method: "GET",
           ...fetchOps,
+          headers: new Headers({
+            "Access-Token": sessionStorage.githubOAuthAccessToken,
+            "Content-Type": "Application/json",
+          }),
         }
       )
         .then((res) => res.json())

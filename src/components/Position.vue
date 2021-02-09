@@ -18,11 +18,11 @@ export default {
 </script>
 <style scoped>
 .editable-lines {
-  /* width: 80px; */
   background-color: #fff;
-  padding: 130px 0 0 15px;
+  padding: 88px 0 0 15px;
 }
 .editable-lines > span {
   display: block;
+  height: 18px;
 }
 </style>

@@ -28,6 +28,7 @@
   height: 100%;
   box-sizing: border-box;
   padding: 100px;
+  background: #fff;
   display: flex;
 }
 .editable-review-btn {
@@ -73,4 +74,10 @@
 .editable-new-content {
   border: 1px solid #ddd;
   padding: 10px;
+  background: #fff;
+}
+
+.editable-new-content > div {
+  height: 18px;
+  line-height: 18px;
 }

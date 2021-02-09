@@ -37,25 +37,23 @@
               veaba-bot
             </a>
           </p>
-          <!---TODO: add line index feature-->
+          <!-- `<pre>` elements and content are not on the same line, there will be indentation problems.-->
           <pre
             class="editable-new-content"
             contenteditable="true"
             @input="onChange"
             @focus="onFocus"
             @blur="onBlur"
+            >{{ eventData.content }}</pre
           >
-            <code>
-              <!-- TODO: contenteditable 与 data 绑定-->
-            {{ eventData.content }}
-            </code>
-          </pre>
+          <!-- btn -->
+          <div class="editable-review-btn">
+            <button @click="onApplyPullRequest" :disabled="disabled">
+              应用
+            </button>
+            <button @click="closeModal">关闭</button>
+          </div>
         </div>
-      </div>
-
-      <div class="editable-review-btn">
-        <button @click="onApplyPullRequest" :disabled="disabled">应用</button>
-        <button @click="closeModal">关闭</button>
       </div>
     </div>
   </div>
@@ -70,9 +68,10 @@ import { updatePRAPI, fetchOps } from "../config";
 import Position from "./Position";
 export default {
   mounted() {
+    this.originContentLine = this.countOriginContent(this.eventData.content);
     bus.$on("showReview", (data) => {
       this.eventData = data;
-      this.tempContent = data.content;
+      this.originContentLine = this.countOriginContent(data.content);
     });
   },
   components: { Position },
@@ -81,41 +80,65 @@ export default {
       eventData: {
         // test data
         // content:
-        //   "\n## 使用插件\n\n在使用 `createApp()` 初始化 Vue 应用程序后，你可以通过调用 `use()` 方法将插件添加到你的应用程序中。\n\n我们将使用在[编写插件](#编写插件)部分中创建的 `i18nPlugin` 进行演示。\n\n`use()` 方法有两个参数。第一个是要安装的插件，在这种情况下为 `i18nPlugin`。\n\n它还会自动阻止你多次使用同一插件，因此在同一插件上多次调用只会安装一次该插件。\n\n第二个参数是可选的，并且取决于每个特定的插件。在演示 `i18nPlugin` 的情况下，它是带有转换后的字符串的对象。\n",
+        //   "## 使用插件\n\n在使用 `createApp()` 初始化 Vue 应用程序后，你可以通过调用 `use()` 方法将插件添加到你的应用程序中。\n\n我们将使用在[编写插件](#编写插件)部分中创建的 `i18nPlugin` 进行演示。\n\n`use()` 方法有两个参数。第一个是要安装的插件，在这种情况下为 `i18nPlugin`。\n\n它还会自动阻止你多次使用同一插件，因此在同一插件上多次调用只会安装一次该插件。\n\n第二个参数是可选的，并且取决于每个特定的插件。在演示 `i18nPlugin` 的情况下，它是带有转换后的字符串的对象。\n",
         content: "",
         status: false,
       },
       disabled: false,
-      fetchOps: fetchOps,
-      tempContent: "",
+      originContentLine: 0,
+      otherDivLine: 0,
     };
   },
   computed: {
     breakLines() {
-      let lines = 0;
-      for (let i in this.tempContent) {
-        if (this.tempContent[i] === "\n") lines++;
-      }
-      return lines;
+      // todo 内容被清空的时候
+      return this.originContentLine + this.otherDivLine;
     },
   },
   methods: {
+    countOriginContent(nodeOrContent, isNode) {
+      let lines = 0;
+      if (nodeOrContent) {
+        let text = "";
+        if (isNode) {
+          text = nodeOrContent.textContent;
+        } else {
+          text = nodeOrContent;
+        }
+        for (let i in text) {
+          if (text[i] === "\n") lines++;
+        }
+      }
+      return lines;
+    },
     closeModal() {
       this.eventData.status = false;
     },
+    debounce(fn, wait) {
+      let timer = 0;
+      return function (...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          fn.apply(this, args);
+        }, wait);
+      };
+    },
     /**
-     * contenteditable input change
+     * contenteditable input event generate div element
      */
     onChange(event) {
-      console.log("event=>", event.target.textContent);
-      setTimeout(() => {
-        this.tempContent = event.target.innerText;
-      }, 100);
+      this.otherDivLine = (event.target.children || []).length;
+      const firstTextNode = event.target.childNodes[0];
+      const w = this;
+      // todo 防抖函数
+      this.debounce(() => {
+        if (firstTextNode === undefined) w.originContentLine = 1;
+        w.originContentLine = w.countOriginContent(firstTextNode, true);
+      }, 100)();
     },
     // bug:
     onFocus() {
       console.log("focus=>");
-      this.tempContent = this.eventData.content;
     },
     onBlur() {
       console.log("blur=>");
@@ -124,15 +147,21 @@ export default {
       this.disabled = true;
       // return;
       // fetch("updatePRAPI", {
+      const contentNode = document.querySelector(".editable-new-content");
+      const content = contentNode && contentNode.innerText;
       fetch(updatePRAPI, {
         body: JSON.stringify({
           owner: this.eventData.owner,
           repo: this.eventData.repo,
           path: this.eventData.path,
-          content: this.tempContent,
+          content: content,
         }),
         method: "POST",
-        ...this.fetchOps,
+        ...fetchOps,
+        headers: new Headers({
+          "Access-Token": sessionStorage.githubOAuthAccessToken,
+          "Content-Type": "Application/json",
+        }),
       })
         .then((res) => res.json())
         .then((data) => {
