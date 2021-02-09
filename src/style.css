@@ -28,6 +28,7 @@
   height: 100%;
   box-sizing: border-box;
   padding: 100px;
+  display: flex;
 }
 .editable-review-btn {
   text-align: center;
@@ -37,6 +38,9 @@
   background: #fff;
 }
 
+.editable-review-code {
+  flex: 1;
+}
 .editable-review-code::after {
   display: block;
   content: "";
@@ -51,7 +55,8 @@
 }
 
 .editable-new-code {
-  background: #e6ffed;
+  /* background: #e6ffed; */
+  background: #fff;
 }
 
 .editable-review-body {
