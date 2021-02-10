@@ -1,5 +1,5 @@
 {
-  "name": "@vuepres/plugin-editable",
+  "name": "vuepress-plugin-editable",
   "version": "1.0.0",
   "author": "veaba",
   "license": "MIT",
@@ -7,6 +7,17 @@
   "scripts": {
     "dev": "vuepress dev docs",
     "build": "vuepress build docs"
+  },
+  "homepage": "https://github.com/veaba/vuepress-plugin-editable",
+  "bugs": {
+    "url": "https://github.com/veaba/vuepress-plugin-editable/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/veaba/vuepress-plugin-editable.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "vuepress": "^1.8.0"
