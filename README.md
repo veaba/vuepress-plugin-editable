@@ -6,6 +6,7 @@ Let's editing vuepress generate docs so easy!
 
 > 安全警告：目前为了方便实现功能，`veaba-bot` 会显式地将 Github `AccessToken` 重定向到你的发起 oAuth 页面的 url，为了你的 Github 账号安全，请始终避免泄露 `AccessToken` 给第三方，包括 [veaba-bot](https://github.com/veaba/veaba-bot)，`veaba-bot` 不会保留存储你的 `AccessToken`信息。你的 `AccessToken` 是通过 fetch 里设置的 Rquest header `access-token` 传递给 `veaba-bot`。
 
+
 ## Why vuepress-plugin-editable
 
 Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article creation and revision process.
@@ -14,6 +15,12 @@ You don't even need to open vscode, you just find a mistake while reading the do
 
 This will lower the threshold for developers to participate in open source documentation maintenance.
 
+## Install
+
+```sh
+npm install -D vuepress-plugin-editable
+# OR yarn add -D vuepress-plugin-editable
+```
 ## Usage
 
 1. Double-click on the vuepress generated content.
