@@ -1,12 +1,14 @@
 {
+  "name": "@vuepres/plugin-editable",
+  "version": "1.0.0",
+  "author": "veaba",
+  "license": "MIT",
+  "main": "../src/index.js",
   "scripts": {
     "dev": "vuepress dev docs",
     "build": "vuepress build docs"
   },
   "devDependencies": {
     "vuepress": "^1.8.0"
-  },
-  "dependencies": {
-    "markdown-it": "^12.0.4"
   }
 }

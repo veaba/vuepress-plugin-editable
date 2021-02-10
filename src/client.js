@@ -15,10 +15,8 @@ export default {
       preNode: null,
       preNodeContent: null, // current old content
       isPlainTextStatus: false,
-      // TODO 通过本插件提交后有记录
     };
   },
-  // TODO 删除后就丢失了 text node 无法再输入了
   mounted() {
     const targetNode = document.querySelector("body");
     let isEditable = null;
@@ -57,12 +55,11 @@ export default {
 
         this.preLine = currentLine;
         this.preNode = event.target;
-        // TODO temp handler 实际上这种处理方式欠妥
+        // temp handler 实际上这种处理方式欠妥
         this.preNodeContent = event.target.innerHTML.replace(
           /<strong(.+?)strong>/g,
           ""
         );
-        //
       }
     };
 
@@ -153,14 +150,9 @@ export default {
       }
     },
     /**
-     * TODO 全篇检查
-     * TODO 单行检查
      * @param sourcePath {string}
      * @param line {number}
      * @param content {string}
-     * @todo 还要记录此处时候有 PR 关联的更新
-     * @TODO 检测长度变化，到底有没有是真的更新
-     * @TODO 你有更新需要提交，请确认操作
      * */
     updatePR(event) {
       const repoPrefix = this.$themeConfig.repo || "";
@@ -226,9 +218,7 @@ export default {
     },
 
     /**
-     * 判断是否是纯文本
-     * @TODO 纯文本，直接在当前行 可发起 PR
-     * @TODO 非纯文本，需要进一步打开控制台来手动编辑
+     * is plain text
      * @return {boolean}
      */
     isPlainText(node) {
@@ -275,7 +265,6 @@ export default {
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log("data=>", data);
           bus.$emit("showLoading", false);
           if (data.code === 0) {
             bus.$emit("showReview", {
@@ -286,8 +275,6 @@ export default {
               content: data.data,
             });
           } else {
-            // todo error message this.respHandler(data);
-            console.log(11);
             bus.$emit("onReceive", data, true);
           }
         })
@@ -297,7 +284,7 @@ export default {
     },
     respHandler(data = {}) {
       if (data.code === 0) {
-        alert("success! see: " + "https://github.com/" + owner + "/" + repo);
+        bus.$emit("onReceive", data, true);
       } else {
         sessionStorage.removeItem("githubOAuthAccessToken");
         location.href = this.$route.path;
