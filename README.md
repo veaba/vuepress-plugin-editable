@@ -22,15 +22,15 @@ This will lower the threshold for developers to participate in open source docum
 
 ## Features
 
-- TODO: vuepress ecosystem
+- [x] vuepress ecosystem
 
 - TODO: vitepress ecosystem
 
-- plain text mode: HTML setting `contenteditable:true` redirect pull request.
+- [x] plain text mode: HTML setting `contenteditable:true` redirect pull request.
 
-- TODO: complex text mode: diff origin source file content.
+- [x] complex text mode: diff origin source file content.
 
-- TODO: success alert ui
+- [x] success/error alert ui
 
 ## Design
 

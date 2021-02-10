@@ -3,12 +3,25 @@
 <template>
   <div v-if="status" class="editable-poptip" :style="{ borderColor }">
     <div>
-      <strong>{{ res.code === 0 ? "Success: " : "Error: " }} </strong>
+      <strong>{{ res.code === 0 ? "Successful!: " : "Warning! " }} </strong>
     </div>
     <div v-if="res.code !== 0">
-      message: <code class="code">{{ subMessage(res.message) }}</code>
+      <p>
+        message: <code class="code">{{ subMessage(res.message) }}</code>
+      </p>
+
+      <p v-if="res.code === 403">
+        Fork first:
+        <a
+          v-if="$themeConfig.repo"
+          :href="'https://github.com/' + $themeConfig.repo"
+          target="_blank"
+        >
+          {{ $themeConfig.repo }}</a
+        >
+      </p>
     </div>
-    <div class="" v-else>
+    <div v-else>
       See:
       <a :href="res.data && res.data.html_url" target="_blank">
         Pull Request
@@ -65,8 +78,8 @@ export default {
   position: fixed;
   border: 1px solid #3eaf7c;
   box-sizing: border-box;
+  background: #fff;
   width: 360px;
-  height: 130px;
   bottom: 40px;
   right: 40px;
   padding: 20px;
