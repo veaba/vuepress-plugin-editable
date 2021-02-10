@@ -10,30 +10,17 @@
       <Position :lines="breakLines"></Position>
       <!-- TODO: Get English version content-->
       <div class="editable-review-code">
-        <!-- <div class="editable-origin-code editable-review-body">
-          <h3>old content</h3>
-          <pre class="origin-content">
-            <code>
-            {{ eventData.originContent }}
-            </code>
-          </pre>
-        </div>  -->
-
-        <!--
-        TODO: get source markdown file view, like setting english origin version repo  
-        <div class="edittable-source-code"></div>
-        -->
         <div class="editable-new-code editable-review-body">
           <p>
             Powered by
             <a
               href="https://github.com/veaba/vuepress-plugin-editable/"
-              target="_blanck"
+              target="_blank"
             >
               vuepress-plugin-editable
             </a>
             and
-            <a href="https://github.com/veaba/veaba-bot/" target="_blanck">
+            <a href="https://github.com/veaba/veaba-bot/" target="_blank">
               veaba-bot
             </a>
           </p>
@@ -42,8 +29,6 @@
             class="editable-new-content"
             contenteditable="true"
             @input="onChange"
-            @focus="onFocus"
-            @blur="onBlur"
             >{{ eventData.content }}</pre
           >
           <!-- btn -->
@@ -59,9 +44,6 @@
   </div>
 </template>
 
-<!--
-TODO: 由于渲染逻辑较为复杂，所以这里不好直接应用content 作为新更改的数据
--->
 <script>
 import bus from "../eventBus";
 import { updatePRAPI, fetchOps } from "../config";
@@ -91,7 +73,6 @@ export default {
   },
   computed: {
     breakLines() {
-      // todo 内容被清空的时候
       return this.originContentLine + this.otherDivLine;
     },
   },
@@ -130,25 +111,19 @@ export default {
       this.otherDivLine = (event.target.children || []).length;
       const firstTextNode = event.target.childNodes[0];
       const w = this;
-      // todo 防抖函数
       this.debounce(() => {
         if (firstTextNode === undefined) w.originContentLine = 1;
         w.originContentLine = w.countOriginContent(firstTextNode, true);
       }, 100)();
     },
-    // bug:
-    onFocus() {
-      console.log("focus=>");
-    },
-    onBlur() {
-      console.log("blur=>");
-    },
+    /**
+     * apply pull request
+     */
     onApplyPullRequest() {
       this.disabled = true;
-      // return;
-      // fetch("updatePRAPI", {
       const contentNode = document.querySelector(".editable-new-content");
       const content = contentNode && contentNode.innerText;
+      bus.$emit("showLoading", true);
       fetch(updatePRAPI, {
         body: JSON.stringify({
           owner: this.eventData.owner,
@@ -167,16 +142,16 @@ export default {
         .then((data) => {
           this.disabled = false;
           if (data.code === 0) {
-            alert(
-              "success see: htts://github.com/" +
-                this.eventData.owner +
-                "/" +
-                this.eventData.repo
-            );
-            // todo reloade page
-          } else {
-            console.warn(data);
+            this.eventData.status = false;
+            setTimeout(() => {
+              location.reload();
+            }, 5000);
           }
+          bus.$emit("showLoading", false);
+          bus.$emit("onReceive", data, true);
+        })
+        .catch(() => {
+          bus.$emit("showLoading", false);
         });
     },
   },

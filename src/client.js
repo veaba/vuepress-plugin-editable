@@ -1,5 +1,6 @@
 import "./style.css";
 import bus from "./eventBus";
+
 import {
   appDomain,
   githubOAuthUrl,
@@ -188,7 +189,6 @@ export default {
      * handler plain text PR
      */
     postSinglePR(owner, repo, path, content, line) {
-      console.log("arguments=>", arguments);
       fetch(updatePRAPI, {
         body: JSON.stringify({
           owner,
@@ -261,6 +261,7 @@ export default {
      * get origin source file content
      */
     getOriginContent(owner, repo, path) {
+      bus.$emit("showLoading", true);
       fetch(
         getContetAPI + "?owner=" + owner + "&repo=" + repo + "&path=" + path,
         {
@@ -275,6 +276,7 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           console.log("data=>", data);
+          bus.$emit("showLoading", false);
           if (data.code === 0) {
             bus.$emit("showReview", {
               status: true,
@@ -284,8 +286,13 @@ export default {
               content: data.data,
             });
           } else {
-            // this.respHandler(data);
+            // todo error message this.respHandler(data);
+            console.log(11);
+            bus.$emit("onReceive", data, true);
           }
+        })
+        .catch(() => {
+          bus.$emit("showLoading", false);
         });
     },
     respHandler(data = {}) {

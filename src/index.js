@@ -11,9 +11,9 @@ module.exports = (options, ctx) => {
       $page.remoteRelativePath = _filePath.substr(cwdLen).replace(/\\/g, "/");
     },
     enhanceAppFiles: [resolve(__dirname, "enhanceAppFiles.js")],
-    globalUIComponents: "EditableReview",
-    define:{
-      CAN_REVIEW:options.canReview
+    globalUIComponents: ["EditableReview", "EditableLoading", "EditablePoptip"],
+    define: {
+      CAN_REVIEW: options.canReview,
     },
     clientRootMixin: resolve(__dirname, "client.js"),
   };
