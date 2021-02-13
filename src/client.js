@@ -19,32 +19,28 @@ export default {
       const currentLine = event.target.getAttribute("data-editable-line");
       if (currentLine || currentLine != null) {
         isEditable = event.target.getAttribute("contenteditable");
-
         let oAuth = "Github OAuth";
         event.target.classList.add("focus-editable");
-
         if (!this.isOAuthStatus()) {
           this.createMenu(event, { oAuth });
-          if (!this.isPlainText(event.target)) {
-            event.target.classList.add("no-edit");
-          }
-        } else {
-          if (this.isPlainText(event.target)) {
-            //  plain text
+        }
+        if (this.isPlainText(event.target)) {
+          event.target.classList.remove("no-edit");
+          if (this.isOAuthStatus()) {
             this.createMenu(event, {
               apply: "应用",
               restore: "还原",
             });
-            this.listenerInput(event);
-            //
             event.target.setAttribute("contenteditable", true);
-          } else {
-            //  complex text
+            this.listenerInput(event);
+          }
+        } else {
+          event.target.classList.add("no-edit");
+          if (this.isOAuthStatus()) {
             this.createMenu(event, {
               update: "修改",
               restore: "还原",
             });
-            event.target.classList.add("no-edit");
           }
         }
 
@@ -154,6 +150,7 @@ export default {
       const repoPrefix = this.$themeConfig.repo || "";
       if (!repoPrefix || !repoPrefix.length) {
         console.warn("Warning: You have not set the repo url");
+        return;
       }
       const node = document.querySelector(".focus-editable");
       const menuNode = document.querySelector(".editable-menu");
@@ -217,17 +214,24 @@ export default {
     },
 
     /**
-     * is plain text
+     * is plain text，create children no is a async function.
      * @return {boolean}
+     * thi
      */
     isPlainText(node) {
-      if (!node.children.length) {
+      if (
+        !node.children.length ||
+        (node.children.length &&
+          node.children[0].classList.contains("editable-menu"))
+      ) {
         this.isPlainTextStatus = true;
         return true;
       } else {
         this.isPlainTextStatus = false;
         return false;
       }
+
+      // 不存在 或者 =1 且只有editable-meneu => true
     },
 
     /**
@@ -295,14 +299,11 @@ export default {
      * @return  {boolean}
      */
     isOAuthStatus() {
-      if (!this.$route.query.accessToken) {
-        return false;
-      } else {
-        return !!(
-          sessionStorage.githubOAuthAccessToken &&
-          sessionStorage.githubOAuthAccessToken.length === 40
-        );
+      const accessToken = this.$route.query.accessToken;
+      if (accessToken && accessToken.length === 40) {
+        return true;
       }
+      return false;
     },
   },
 };

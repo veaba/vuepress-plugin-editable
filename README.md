@@ -6,7 +6,6 @@ Let's editing vuepress generate docs so easy!
 
 > 安全警告：目前为了方便实现功能，`veaba-bot` 会显式地将 Github `AccessToken` 重定向到你的发起 oAuth 页面的 url，为了你的 Github 账号安全，请始终避免泄露 `AccessToken` 给第三方，包括 [veaba-bot](https://github.com/veaba/veaba-bot)，`veaba-bot` 不会保留存储你的 `AccessToken`信息。你的 `AccessToken` 是通过 fetch 里设置的 Rquest header `access-token` 传递给 `veaba-bot`。
 
-
 ## Why vuepress-plugin-editable
 
 Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article creation and revision process.
@@ -21,6 +20,7 @@ This will lower the threshold for developers to participate in open source docum
 npm install -D vuepress-plugin-editable
 # OR yarn add -D vuepress-plugin-editable
 ```
+
 ## Usage
 
 1. Double-click on the vuepress generated content.
@@ -79,9 +79,55 @@ npm install -D vuepress-plugin-editable
 - 指定父级包含标签
 - 指定 web 站点对应的 repo，以及正则匹配的地址
 - 发起请求之前校验提示
-- 双英文对照
+- 双英文对照 n
 - 因为 vuepress 内含有一些 vue 组件，所以不能直接纯 HTML 解析为 markdown 来创建 PR
 - 埋点行为： line 数
+
+## Bug
+
+Listed not supported yet!
+
+1. custom container
+
+```txt
+::: warning
+*here be dragons*
+:::
+
+```
+
+2. defintion code
+
+```txt
+:   Definition 2
+
+        { some code, part of Definition 2 }
+
+    Third paragraph of definition 2.
+
+```
+
+3. img
+
+4. table
+
+5. code
+
+6. Emphasis
+
+```txt
+
+**This is bold text**
+
+__This is bold text__
+
+*This is italic text*
+
+_This is italic text_
+
+~~Strikethrough~~
+
+```
 
 ## Reference
 

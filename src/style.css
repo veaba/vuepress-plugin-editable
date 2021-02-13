@@ -15,6 +15,7 @@
   position: absolute;
   right: 0;
   top: -30px;
+  font-size: 13px;
 }
 .editable-menu span {
   cursor: pointer;
