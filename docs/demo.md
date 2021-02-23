@@ -18,7 +18,7 @@ You will like those projects!
 ###### h6 Heading
 
 
-## Horizontal Rules
+Enable typographer option to see result. 222
 
 ___
 
