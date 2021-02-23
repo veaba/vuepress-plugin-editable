@@ -24,13 +24,12 @@
 
 .editable-review-warp {
   position: relative;
+  display: flex;
   width: 1280px;
   margin: 0 auto;
   height: 100%;
   box-sizing: border-box;
-  padding: 100px;
   background: #fff;
-  display: flex;
 }
 .editable-review-btn {
   text-align: center;

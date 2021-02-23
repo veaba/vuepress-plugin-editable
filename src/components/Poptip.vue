@@ -86,7 +86,7 @@ export default {
   color: #3eaf7c;
   border-radius: 50%;
   text-align: center;
-  line-height: 20px;
+  line-height: 15px;
   cursor: pointer;
   z-index: 1;
 }
@@ -99,6 +99,7 @@ export default {
   bottom: 40px;
   right: 40px;
   padding: 20px;
+  z-index:3;
 }
 .editable-poptip code {
   color: #476582;

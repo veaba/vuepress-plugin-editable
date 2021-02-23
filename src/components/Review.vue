@@ -3,7 +3,7 @@
     v-if="eventData.status"
     class="editable-review"
     :style="{
-      'z-index': this.eventData.status ? 0 : -1,
+      'z-index': this.eventData.status ? 2 : -1,
     }"
   >
     <div class="editable-review-warp">
