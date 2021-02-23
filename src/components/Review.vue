@@ -109,9 +109,7 @@ export default {
       return lines;
     },
     closeModal() {
-      this.eventData.status = false;
-      this.otherDivLine = 0;
-      this.switchBodyScroll(true);
+      location.reload()
     },
     debounce(fn, wait) {
       let timer = 0;
