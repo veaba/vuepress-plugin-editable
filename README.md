@@ -4,6 +4,7 @@
 
 <a href="https://npmcharts.com/compare/vuepress-plugin-editable?minimal=true"><img src="https://img.shields.io/npm/dm/vuepress-plugin-editable.svg" alt="Downloads"></a>
 <a href="https://www.npmjs.com/package/vuepress-plugin-editable"><img src="https://img.shields.io/npm/v/vuepress-plugin-editable.svg" alt="Version"></a>
+[![release docs CI](https://github.com/veaba/vuepress-plugin-editable/actions/workflows/release-docs.yml/badge.svg)](https://github.com/veaba/vuepress-plugin-editable/actions/workflows/release-docs.yml)
 
 </p>
 

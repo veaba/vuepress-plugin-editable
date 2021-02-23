@@ -3,7 +3,7 @@ name: release docs CI
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
