@@ -1,10 +1,10 @@
 ---
 home: true
 title: sss
-heroText: Vuepress-plagin-editable
+heroText: Vuepress-plugin-editable
 tagline: Quickly edit documents to PR
 actionText: Get Started →
-actionLink: /demo
+actionLink: /guide
 features:
   - title: 简洁至上
     details: 依赖 Vuepress，独立插件

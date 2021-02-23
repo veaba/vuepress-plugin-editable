@@ -1,14 +1,14 @@
 import "./style.css";
 import bus from "./eventBus";
 
-import { githubOAuthUrl, updatePRAPI, getContentAPI, fetchOps } from "./config";
+import { githubOAuthUrl, updateAPI, getContentAPI, fetchOps } from "./config";
 
 export default {
   data() {
     return {
       preLine: null,
       preNode: null,
-      preNodeContent: null, // current old content
+      preNodeContent: null,
       isPlainTextStatus: false,
     };
   },
@@ -154,8 +154,9 @@ export default {
       }
       const node = document.querySelector(".focus-editable");
       const menuNode = document.querySelector(".editable-menu");
-      node.removeChild(menuNode);
-      const content = node.innerHTML;
+      // plain text 模式下，menuNode 不是node 的直接子级
+      menuNode && menuNode.remove();
+      const content = node.innerText;
       const line = node.getAttribute("data-editable-line");
       const { owner, repo } = this.getOwnerRepo(repoPrefix);
       if (this.isPlainTextStatus) {
@@ -174,7 +175,8 @@ export default {
      * handler plain text PR
      */
     postSinglePR(owner, repo, path, content, line) {
-      fetch(updatePRAPI, {
+      bus.$emit("showLoading", true);
+      fetch(updateAPI, {
         body: JSON.stringify({
           owner,
           repo,
@@ -193,12 +195,16 @@ export default {
           return res.json();
         })
         .then((data) => {
-          this.respHandler(data);
+          bus.$emit("onReceive", data, true);
+          bus.$emit("showLoading", false);
+        })
+        .catch(() => {
+          bus.$emit("showLoading", false);
         });
     },
     /**
      * @return {
-     * owner,
+     *  owner,
      *  repo
      * }
      */
@@ -230,8 +236,6 @@ export default {
         this.isPlainTextStatus = false;
         return false;
       }
-
-      // 不存在 或者 =1 且只有editable-meneu => true
     },
 
     /**
@@ -284,15 +288,6 @@ export default {
         .catch(() => {
           bus.$emit("showLoading", false);
         });
-    },
-    respHandler(data = {}) {
-      if (data.code === 0) {
-        bus.$emit("onReceive", data, true);
-      } else {
-        sessionStorage.removeItem("githubOAuthAccessToken");
-        location.href = this.$route.path;
-        console.warn(data);
-      }
     },
     /*
      * 判断是否授权过，即检查本地是否存储 access token

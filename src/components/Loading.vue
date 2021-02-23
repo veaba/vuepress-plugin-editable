@@ -3,7 +3,6 @@
  -->
 <template>
   <div class="editable-loading" v-if="loading">
-    <!-- <p>Loading...</p> -->
     <div class="editable-storm-loading"></div>
   </div>
 </template>

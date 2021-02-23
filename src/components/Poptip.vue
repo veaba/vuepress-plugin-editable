@@ -4,6 +4,8 @@
   <div v-if="status" class="editable-poptip" :style="{ borderColor }">
     <div>
       <strong>{{ res.code === 0 ? "Successful!: " : "Warning! " }} </strong>
+
+      <span class="close-poptip" @click="closePoptip">x</span>
     </div>
     <div v-if="res.code !== 0">
       <p>
@@ -45,7 +47,6 @@ export default {
   },
   mounted() {
     bus.$on("onReceive", (json = {}, status) => {
-      console.log("json==>", json, status);
       const { code, data, message } = json;
       this.res = {
         code,
@@ -59,13 +60,15 @@ export default {
       } else {
         this.borderColor = "#eb7350";
       }
-
-      setTimeout(() => {
-        this.status = false;
-      }, 5000);
     });
   },
   methods: {
+    closePoptip() {
+      this.status = false;
+      if(this.res.code!==0){
+        location.reload();
+      }
+    },
     subMessage(str) {
       return (str || "").replace(/^.*: /g, "");
     },
@@ -74,6 +77,19 @@ export default {
 </script>
 
 <style scoped>
+.close-poptip {
+  position: relative;
+  float: right;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #3eaf7c;
+  color: #3eaf7c;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  cursor: pointer;
+  z-index: 1;
+}
 .editable-poptip {
   position: fixed;
   border: 1px solid #3eaf7c;

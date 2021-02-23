@@ -46,7 +46,7 @@
 
 <script>
 import bus from "../eventBus";
-import { updatePRAPI, fetchOps } from "../config";
+import { updateAPI, fetchOps } from "../config";
 import Position from "./Position";
 export default {
   mounted() {
@@ -124,7 +124,7 @@ export default {
       const contentNode = document.querySelector(".editable-new-content");
       const content = contentNode && contentNode.innerText;
       bus.$emit("showLoading", true);
-      fetch(updatePRAPI, {
+      fetch(updateAPI, {
         body: JSON.stringify({
           owner: this.eventData.owner,
           repo: this.eventData.repo,
