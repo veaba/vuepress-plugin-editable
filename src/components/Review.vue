@@ -34,9 +34,9 @@
           <!-- btn -->
           <div class="editable-review-btn">
             <button @click="onApplyPullRequest" :disabled="disabled">
-              应用
+              应用(Apply)
             </button>
-            <button @click="closeModal">关闭</button>
+            <button @click="closeModal">关闭(Close)</button>
           </div>
         </div>
       </div>
@@ -54,21 +54,20 @@ export default {
     bus.$on("showReview", (data) => {
       this.eventData = data;
       this.originContentLine = this.countOriginContent(data.content);
+      this.bodyScrollDefaultValue = this.switchBodyScroll();
     });
   },
   components: { Position },
   data() {
     return {
       eventData: {
-        // test data
-        // content:
-        //   "## 使用插件\n\n在使用 `createApp()` 初始化 Vue 应用程序后，你可以通过调用 `use()` 方法将插件添加到你的应用程序中。\n\n我们将使用在[编写插件](#编写插件)部分中创建的 `i18nPlugin` 进行演示。\n\n`use()` 方法有两个参数。第一个是要安装的插件，在这种情况下为 `i18nPlugin`。\n\n它还会自动阻止你多次使用同一插件，因此在同一插件上多次调用只会安装一次该插件。\n\n第二个参数是可选的，并且取决于每个特定的插件。在演示 `i18nPlugin` 的情况下，它是带有转换后的字符串的对象。\n",
         content: "",
         status: false,
       },
       disabled: false,
       originContentLine: 0,
       otherDivLine: 0,
+      bodyScrollDefaultValue: "",
     };
   },
   computed: {
@@ -77,6 +76,23 @@ export default {
     },
   },
   methods: {
+    /**
+     * disabled body scroll
+     * @param {boolean} true | false
+     */
+    switchBodyScroll(isReset) {
+      const body = document.querySelector("body");
+      const tempOverflowValue = body.style.overflow;
+      if (isReset) {
+        body.style.overflow = this.bodyScrollDefaultValue;
+        this.$nextTick(() => {
+          this.bodyScrollDefaultValue = "";
+        });
+      } else {
+        body.style.overflow = "hidden";
+      }
+      return tempOverflowValue;
+    },
     countOriginContent(nodeOrContent, isNode) {
       let lines = 0;
       if (nodeOrContent) {
@@ -94,6 +110,8 @@ export default {
     },
     closeModal() {
       this.eventData.status = false;
+      this.otherDivLine = 0;
+      this.switchBodyScroll(true);
     },
     debounce(fn, wait) {
       let timer = 0;
@@ -147,11 +165,13 @@ export default {
               location.reload();
             }, 5000);
           }
+          this.switchBodyScroll();
           bus.$emit("showLoading", false);
           bus.$emit("onReceive", data, true);
         })
         .catch(() => {
           bus.$emit("showLoading", false);
+          this.switchBodyScroll();
         });
     },
   },

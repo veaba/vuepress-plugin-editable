@@ -27,9 +27,12 @@
   display: flex;
   width: 1280px;
   margin: 0 auto;
-  height: 100%;
+  height: 80%;
+  padding-top: 40px;
   box-sizing: border-box;
   background: #fff;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .editable-review-btn {
   text-align: center;
