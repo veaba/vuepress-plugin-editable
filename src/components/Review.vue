@@ -46,8 +46,9 @@
 
 <script>
 import bus from "../eventBus";
-import { updateAPI, fetchOps } from "../config";
+import { fetchOps } from "../fetchConfig";
 import Position from "./Position";
+
 export default {
   mounted() {
     this.originContentLine = this.countOriginContent(this.eventData.content);
@@ -109,7 +110,7 @@ export default {
       return lines;
     },
     closeModal() {
-      location.reload()
+      location.reload();
     },
     debounce(fn, wait) {
       let timer = 0;
@@ -140,6 +141,7 @@ export default {
       const contentNode = document.querySelector(".editable-new-content");
       const content = contentNode && contentNode.innerText;
       bus.$emit("showLoading", true);
+      const { updateAPI } = this.$page.$editable || {};
       fetch(updateAPI, {
         body: JSON.stringify({
           owner: this.eventData.owner,

@@ -16,7 +16,8 @@ Let's editing vuepress generate docs so easy!
 
 ## Why vuepress-plugin-editable
 
-Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article creation and revision process.
+Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article
+creation and revision process.
 
 You don't even need to open vscode, you just find a mistake while reading the documentation and correct it as you go.
 
@@ -92,6 +93,21 @@ _This is italic text_
 ```
 
 7. Positioning is not accurate
+
+8. H1-H6 auth block position has been mask.
+
+## API
+
+### options
+
+| name          | description          | default                |
+| ------------- | -------------------- | ---------------------- |
+| appDomain     |                      | `https://bot.veaba.me` |
+| getContentAPI |                      | `/api/content/get`     |
+| updateAPI     |                      | `/api/content/update`  |
+| redirectAPI   |                      | `/api/redirect/github` |
+| clientId      | Github APP client id | {clientId}             |
+|               |                      |                        |
 
 ## Reference
 
