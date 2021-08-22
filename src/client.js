@@ -175,6 +175,7 @@ export default {
 		 */
 		postSinglePR(owner, repo, path, content, line) {
 			bus.$emit("showLoading", true);
+			const { updateAPI } = this.$page.$editable || {};
 			fetch(updateAPI, {
 				body: JSON.stringify({
 					owner,

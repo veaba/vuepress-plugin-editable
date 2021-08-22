@@ -1,6 +1,6 @@
 {
   "name": "vuepress-plugin-editable",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "author": "veaba",
   "license": "MIT",
   "main": "src/index.js",
@@ -20,6 +20,6 @@
     "access": "public"
   },
   "devDependencies": {
-    "vuepress": "^1.8.0"
+    "vuepress": "^1.8.2"
   }
 }
