@@ -112,7 +112,7 @@ export default {
 				} else {
 					childNode = document.createElement("a");
 					const {githubOAuthUrl, appDomain, clientId, redirectAPI} = this.$page.$editable || {};
-					childNode.href = `${githubOAuthUrl}?client_id=${clientId}&redirect_uri=${appDomain}${redirectAPI}&reference=${location.href}`;
+					childNode.href = `${githubOAuthUrl}?client_id=${clientId}&redirect_uri=${appDomain}${redirectAPI}?reference=${location.href}`;
 				}
 				childNode.innerHTML = btnWords[key];
 				childNode.setAttribute("contenteditable", false);
