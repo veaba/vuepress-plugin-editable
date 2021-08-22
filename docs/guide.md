@@ -10,7 +10,7 @@ This will lower the threshold for developers to participate in open source docum
 
 ## Install
 
-1. install dep
+install deps: 
 
 ```sh
 npm install -D vuepress-plugin-editable
