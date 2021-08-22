@@ -104,7 +104,6 @@ export default {
 			parenNode.setAttribute("contenteditable", false);
 			const vNode = document.createDocumentFragment();
 			
-			console.log('this.$page=>', this.$page);
 			for (let key in btnWords) {
 				let childNode = null;
 				if (key !== "oAuth") {

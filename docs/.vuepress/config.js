@@ -4,7 +4,7 @@ module.exports = {
     [
       require("../../src/index"),
       {
-        appDomain: "https://bot.veaba.me",
+        appDomain: "http://127.0.0.1:8081",
       },
     ],
   ],
