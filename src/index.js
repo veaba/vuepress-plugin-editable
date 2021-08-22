@@ -12,10 +12,12 @@ module.exports = (options, ctx) => {
 			const {_context, _filePath = ""} = $page;
 			const cwdLen = _context.cwd.length;
 			$page.remoteRelativePath = _filePath.substr(cwdLen).replace(/\\/g, "/");
+			const tempUpdateAPI = appDomain + updateAPI || _updateAPI;
+			const tempGetContentAPI = appDomain + getContentAPI || _getContentAPI;
 			$page.$editable = {
 				appDomain: appDomain || _appDomain,
-				getContentAPI: getContentAPI || _getContentAPI,
-				updateAPI: updateAPI || _updateAPI,
+				getContentAPI: tempGetContentAPI,
+				updateAPI: tempUpdateAPI,
 				redirectAPI: redirectAPI || _redirectAPI,
 				clientId: clientId || _clientId,
 				githubOAuthUrl: _githubOAuthUrl
