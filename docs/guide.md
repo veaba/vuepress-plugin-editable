@@ -2,7 +2,7 @@
 
 ## Why vuepress-plugin-editable
 
-Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article creation and revision process.
+Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article creation and revision process.22
 
 You don't even need to open vscode, you just find a mistake while reading the documentation and correct it as you go.
 
