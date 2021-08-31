@@ -4,7 +4,7 @@
 
 Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article creation and revision process.
 
-You don't even need to open vscode, you just find a mistake while reading the documentation and correct it as you go.
+You don't even need to open vscode, you just find a mistake while reading the documentation and correct it as you go.222
 
 This will lower the threshold for developers to participate in open source documentation maintenance.
 
