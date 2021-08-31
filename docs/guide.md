@@ -33,7 +33,7 @@ module.exports = {
 
 ## Usage
 
-1. Double-click on the vuepress generated content.
+Double-click on the vuepress generated content. 双击666
 
 2. OAuth github account and PR to repo's source file.
 
