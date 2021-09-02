@@ -96,6 +96,7 @@ _This is italic text_
 
 8. H1-H6 auth block position has been mask.
 
+9. BUG: 再次发起请求时，应该关闭 dialog
 ## API
 
 ### options
