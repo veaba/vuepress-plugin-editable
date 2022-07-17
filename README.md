@@ -113,3 +113,12 @@ _This is italic text_
 ## Reference
 
 - [First draft](https://github.com/vuejs/docs-next-zh-cn/discussions/377#discussioncomment-298623)
+
+## contributors
+
+
+### test1
+![veaba.svg](https://raw.githubusercontent.com/veaba/contributors/main/repos/veaba/contributors.svg)
+
+### test2
+![veaba.svg](https://raw.githubusercontent.com/veaba/contributors/main/repos/veaba/vuepress-plugin-editable.svg)
