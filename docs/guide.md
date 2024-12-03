@@ -4,7 +4,7 @@
 
 Based on vuepress + markdown ecosystem simplifies the intermediate process and can be quickly applied to the article creation and revision process.
 
-You don't even need to open vscode, you just find a mistake while reading the documentation and correct it as you go.
+You don't even need to open vscode, you just find a mistake while reading the documentation and correct it as you go. 2024年12月3日18:29:17
 
 I am a fork user, and I will be pull request to veaba/vuepress-plugin-editable
 
