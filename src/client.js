@@ -183,7 +183,7 @@ export default {
           line: Number(line),
         }),
         method: 'POST',
-        ...this.fetchOps,
+        ...fetchOps,
         headers: new Headers({
           'Access-Token': sessionStorage.githubOAuthAccessToken,
           'Github-Login': sessionStorage.githubLogin,
