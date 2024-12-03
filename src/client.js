@@ -1,6 +1,6 @@
-import "./style.css";
-import bus from "./eventBus";
-import { fetchOps } from "./fetchConfig";
+import './style.css';
+import bus from './eventBus';
+import { fetchOps } from './fetchConfig';
 
 export default {
   data() {
@@ -11,34 +11,34 @@ export default {
       isPlainTextStatus: false,
     };
   },
-  mounted() {
-    const targetNode = document.querySelector("body");
+  async mounted() {
+    const targetNode = document.querySelector('body');
     let isEditable = null;
     const dblClick = (event) => {
-      const currentLine = event.target.getAttribute("data-editable-line");
+      const currentLine = event.target.getAttribute('data-editable-line');
       if (currentLine || currentLine != null) {
-        isEditable = event.target.getAttribute("contenteditable");
-        let oAuth = "Github OAuth";
-        event.target.classList.add("focus-editable");
+        isEditable = event.target.getAttribute('contenteditable');
+        let oAuth = 'Github OAuth';
+        event.target.classList.add('focus-editable');
         if (!this.isOAuthStatus()) {
           this.createMenu(event, { oAuth });
         }
         if (this.isPlainText(event.target)) {
-          event.target.classList.remove("no-edit");
+          event.target.classList.remove('no-edit');
           if (this.isOAuthStatus()) {
             this.createMenu(event, {
-              apply: "应用",
-              restore: "还原",
+              apply: '应用',
+              restore: '还原',
             });
-            event.target.setAttribute("contenteditable", true);
+            event.target.setAttribute('contenteditable', true);
             this.listenerInput(event);
           }
         } else {
-          event.target.classList.add("no-edit");
+          event.target.classList.add('no-edit');
           if (this.isOAuthStatus()) {
             this.createMenu(event, {
-              update: "修改",
-              restore: "还原",
+              update: '修改',
+              restore: '还原',
             });
           }
         }
@@ -46,18 +46,15 @@ export default {
         this.preLine = currentLine;
         this.preNode = event.target;
         // temp handler 实际上这种处理方式欠妥
-        this.preNodeContent = event.target.innerHTML.replace(
-          /<strong(.+?)strong>/g,
-          ""
-        );
+        this.preNodeContent = event.target.innerHTML.replace(/<strong(.+?)strong>/g, '');
       }
     };
 
     if (targetNode) {
-      targetNode.removeEventListener("dblclick", dblClick);
-      targetNode.addEventListener("dblclick", dblClick);
-      targetNode.removeEventListener("click", this.outsideClick);
-      targetNode.addEventListener("click", this.outsideClick);
+      targetNode.removeEventListener('dblclick', dblClick);
+      targetNode.addEventListener('dblclick', dblClick);
+      targetNode.removeEventListener('click', this.outsideClick);
+      targetNode.addEventListener('click', this.outsideClick);
     }
     this.saveAccessToken();
   },
@@ -66,22 +63,18 @@ export default {
       const { accessToken, login } = this.$route.query;
       if (accessToken) {
         sessionStorage.githubOAuthAccessToken = accessToken;
-        sessionStorage.githubLogin = login || "";
+        sessionStorage.githubLogin = login || '';
       }
     },
     /**
      * click outside
      */
     outsideClick(event) {
-      const clickLine = event.target.getAttribute("data-editable-line");
-      if (
-        this.preLine &&
-        clickLine !== this.preLine &&
-        !event.target.classList.contains("no-need-close")
-      ) {
-        this.preNode.removeAttribute("contenteditable");
-        this.preNode.classList.remove("focus-editable");
-        this.preNode.classList.remove("no-edit");
+      const clickLine = event.target.getAttribute('data-editable-line');
+      if (this.preLine && clickLine !== this.preLine && !event.target.classList.contains('no-need-close')) {
+        this.preNode.removeAttribute('contenteditable');
+        this.preNode.classList.remove('focus-editable');
+        this.preNode.classList.remove('no-edit');
         this.removeMenu();
       }
       this.bindMenuEvent(event);
@@ -99,26 +92,25 @@ export default {
     createMenu(event, btnWords) {
       this.removeMenu();
 
-      const parenNode = document.createElement("strong");
-      parenNode.classList.add("editable-menu");
-      parenNode.classList.add("no-need-close");
-      parenNode.setAttribute("contenteditable", false);
+      const parenNode = document.createElement('strong');
+      parenNode.classList.add('editable-menu');
+      parenNode.classList.add('no-need-close');
+      parenNode.setAttribute('contenteditable', false);
       const vNode = document.createDocumentFragment();
 
       for (let key in btnWords) {
         let childNode = null;
-        if (key !== "oAuth") {
-          childNode = document.createElement("span");
+        if (key !== 'oAuth') {
+          childNode = document.createElement('span');
         } else {
-          childNode = document.createElement("a");
-          const { githubOAuthUrl, clientId, redirectAPI } =
-            this.$page.$editable || {};
+          childNode = document.createElement('a');
+          const { githubOAuthUrl, clientId, redirectAPI } = this.$page.$editable || {};
           childNode.href = `${githubOAuthUrl}?client_id=${clientId}&redirect_uri=${redirectAPI}?reference=${location.href}`;
         }
         childNode.innerHTML = btnWords[key];
-        childNode.setAttribute("contenteditable", false);
-        childNode.classList.add("no-need-close");
-        childNode.classList.add("editable-" + key);
+        childNode.setAttribute('contenteditable', false);
+        childNode.classList.add('no-need-close');
+        childNode.classList.add('editable-' + key);
         vNode.appendChild(childNode);
       }
       parenNode.appendChild(vNode);
@@ -128,46 +120,49 @@ export default {
      * remove menu
      */
     removeMenu() {
-      const editMenu = document.querySelector(".editable-menu");
+      const editMenu = document.querySelector('.editable-menu');
       editMenu && editMenu.remove();
     },
 
     bindMenuEvent(event) {
-      if (
-        event.target.classList.contains("editable-apply") ||
-        event.target.classList.contains("editable-update")
-      ) {
+      if (event.target.classList.contains('editable-apply') || event.target.classList.contains('editable-update')) {
         this.updatePR(event);
       }
-      if (event.target.classList.contains("editable-restore")) {
+      if (event.target.classList.contains('editable-restore')) {
         this.reloadPage(event);
       }
+    },
+
+    /**
+     * 
+     * Compatible Chrome + Firefox for Node.innerText
+    */
+
+    normalizeNodeInner(text){
+      return text.replace(/\s+/g,' ').trim();
     },
     /**
      * @param event
      * */
     updatePR(event) {
-      const repoPrefix = this.$themeConfig.repo || "";
+      const repoPrefix = this.$themeConfig.repo || '';
       if (!repoPrefix || !repoPrefix.length) {
-        console.warn("Warning: You have not set the repo url");
+        console.warn('Warning: You have not set the repo url');
         return;
       }
-      const node = document.querySelector(".focus-editable");
-      const menuNode = document.querySelector(".editable-menu");
+      const node = document.querySelector('.focus-editable');
+      const menuNode = document.querySelector('.editable-menu');
       // plain text 模式下，menuNode 不是node 的直接子级
       menuNode && menuNode.remove();
-      const content = node.innerText.replace(/(\u00A0+)$/, "");
-      const line = node.getAttribute("data-editable-line");
+
+      const content = this.normalizeNodeInner(node.innerText);
+
+      const line = node.getAttribute('data-editable-line');
       const { owner, repo } = this.getOwnerRepo(repoPrefix);
+
       if (this.isPlainTextStatus) {
         this.onRemoveFocusEditable();
-        this.postSinglePR(
-          owner,
-          repo,
-          this.$page.remoteRelativePath,
-          content,
-          line
-        );
+        this.postSinglePR(owner, repo, this.$page.remoteRelativePath, content, line);
       } else {
         this.getOriginContent(owner, repo, this.$page.remoteRelativePath);
       }
@@ -176,8 +171,8 @@ export default {
      * handler plain text PR
      */
     postSinglePR(owner, repo, path, content, line) {
-      bus.$emit("showLoading", true);
-      bus.$emit("onClose");
+      bus.$emit('showLoading', true);
+      bus.$emit('onClose');
       const { updateAPI } = this.$page.$editable || {};
       fetch(updateAPI, {
         body: JSON.stringify({
@@ -187,23 +182,22 @@ export default {
           content,
           line: Number(line),
         }),
-        method: "POST",
+        method: 'POST',
         ...this.fetchOps,
         headers: new Headers({
-          "Access-Token": sessionStorage.githubOAuthAccessToken,
-          "Github-Login": sessionStorage.githubLogin,
-          "Content-Type": "Application/json",
+          'Access-Token': sessionStorage.githubOAuthAccessToken,
+          'Github-Login': sessionStorage.githubLogin,
         }),
       })
         .then((res) => {
           return res.json();
         })
         .then((data) => {
-          bus.$emit("onReceive", data, true);
-          bus.$emit("showLoading", false);
+          bus.$emit('onReceive', data, true);
+          bus.$emit('showLoading', false);
         })
         .catch(() => {
-          bus.$emit("showLoading", false);
+          bus.$emit('showLoading', false);
         });
     },
     /**
@@ -213,10 +207,10 @@ export default {
      * }
      */
     getOwnerRepo(ownerRepo) {
-      const strArr = ownerRepo.split("/");
+      const strArr = ownerRepo.split('/');
       return {
-        owner: strArr[0] ? strArr[0] : "",
-        repo: strArr[1] ? strArr[1] : "",
+        owner: strArr[0] ? strArr[0] : '',
+        repo: strArr[1] ? strArr[1] : '',
       };
     },
     reloadPage() {
@@ -229,11 +223,7 @@ export default {
      * thi
      */
     isPlainText(node) {
-      if (
-        !node.children.length ||
-        (node.children.length &&
-          node.children[0].classList.contains("editable-menu"))
-      ) {
+      if (!node.children.length || (node.children.length && node.children[0].classList.contains('editable-menu'))) {
         this.isPlainTextStatus = true;
         return true;
       } else {
@@ -249,12 +239,12 @@ export default {
      * @fix 提交只时，移除字符
      */
     listenerInput(event) {
-      event.target.addEventListener("input", (inputEvent) => {
+      event.target.addEventListener('input', (inputEvent) => {
         const firstTextNode = inputEvent.target.childNodes[0];
-        if (firstTextNode.nodeName !== "#text") {
-          console.log("firstTextNode=>", firstTextNode);
+        if (firstTextNode.nodeName !== '#text') {
+          console.log('firstTextNode=>', firstTextNode);
           const emptyTextNode = document.createDocumentFragment();
-          const aNode = document.createTextNode("\u00A0");
+          const aNode = document.createTextNode('\u00A0');
           emptyTextNode.appendChild(aNode);
           inputEvent.target.insertBefore(emptyTextNode, firstTextNode);
         }
@@ -264,26 +254,23 @@ export default {
      * get origin source file content
      */
     getOriginContent(owner, repo, path) {
-      bus.$emit("showLoading", true);
-      bus.$emit("onClose");
+      bus.$emit('showLoading', true);
+      bus.$emit('onClose');
       const { getContentAPI } = this.$page.$editable || {};
-      fetch(
-        getContentAPI + "?owner=" + owner + "&repo=" + repo + "&path=" + path,
-        {
-          method: "GET",
-          ...fetchOps,
-          headers: new Headers({
-            "Access-Token": sessionStorage.githubOAuthAccessToken,
-            "Github-Login": sessionStorage.githubLogin,
-            "Content-Type": "Application/json",
-          }),
-        }
-      )
+      // owner repo path
+      fetch(getContentAPI + '?owner=' + owner + '&repo=' + repo + '&path=' + path, {
+        method: 'GET',
+        ...fetchOps,
+        headers: new Headers({
+          'Access-Token': sessionStorage.githubOAuthAccessToken,
+          'Github-Login': sessionStorage.githubLogin,
+        }),
+      })
         .then((res) => res.json())
         .then((data) => {
-          bus.$emit("showLoading", false);
-          if (data.code === 0) {
-            bus.$emit("showReview", {
+          bus.$emit('showLoading', false);
+          if (data.success) {
+            bus.$emit('showReview', {
               status: true,
               owner,
               repo,
@@ -291,11 +278,11 @@ export default {
               content: data.data,
             });
           } else {
-            bus.$emit("onReceive", data, true);
+            bus.$emit('onReceive', data, true);
           }
         })
         .catch(() => {
-          bus.$emit("showLoading", false);
+          bus.$emit('showLoading', false);
         });
     },
     /*
@@ -312,9 +299,9 @@ export default {
      *
      */
     onRemoveFocusEditable() {
-      const focusNode = document.querySelector(".focus-editable");
-      focusNode.removeAttribute("contenteditable");
-      this.preNode.classList.remove("focus-editable");
+      const focusNode = document.querySelector('.focus-editable');
+      focusNode.removeAttribute('contenteditable');
+      this.preNode.classList.remove('focus-editable');
     },
   },
 };

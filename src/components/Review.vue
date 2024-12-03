@@ -159,7 +159,7 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           this.disabled = false;
-          if (data.code === 0) {
+          if (data.success) {
             this.eventData.status = false;
             setTimeout(() => {
               location.reload();

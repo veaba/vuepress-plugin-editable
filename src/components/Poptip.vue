@@ -3,24 +3,13 @@
 <template>
   <div v-if="status" class="editable-poptip" :style="{ borderColor }">
     <div>
-      <strong>{{ res.code === 0 ? "Successful！" : "Warning! " }} </strong>
+      <strong>{{ res.success ? "Successful！" : "Warning! " }} </strong>
 
       <span class="close-poptip" @click="closePoptip">x</span>
     </div>
-    <div v-if="res.code !== 0">
+    <div v-if="!res.success">
       <p>
         message: <code class="code">{{ subMessage(res.message) }}</code>
-      </p>
-
-      <p v-if="res.code === 403">
-        Fork first:
-        <a
-          v-if="$themeConfig.repo"
-          :href="'https://github.com/' + $themeConfig.repo"
-          target="_blank"
-        >
-          {{ $themeConfig.repo }}</a
-        >
       </p>
     </div>
     <div v-else>
@@ -38,7 +27,7 @@ export default {
     return {
       borderColor: "#ddd",
       res: {
-        code: 0,
+        success: true,
         data: "",
         message: "",
       },
@@ -50,15 +39,15 @@ export default {
       this.status = false;
     });
     bus.$on("onReceive", (json = {}, status) => {
-      const { code, data, message } = json;
+      const { success, data, message } = json;
       this.res = {
-        code,
+        success,
         data,
         message,
       };
 
       this.status = status;
-      if (code === 0) {
+      if (success) {
         this.borderColor = "#3eaf7c";
       } else {
         this.borderColor = "#eb7350";
@@ -68,7 +57,7 @@ export default {
   methods: {
     closePoptip() {
       this.status = false;
-      if (this.res.code !== 0) {
+      if (!this.res.success) {
         location.reload();
       }
     },
