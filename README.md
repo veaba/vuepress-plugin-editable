@@ -104,9 +104,9 @@ _This is italic text_
 | name          | description          | default                |
 | ------------- | -------------------- | ---------------------- |
 | appDomain     |                      | `https://bot.veaba.me` |
-| getContentAPI |                      | `/api/content/get`     |
-| updateAPI     |                      | `/api/content/update`  |
-| redirectAPI   |                      | `/api/redirect/github` |
+| getContentAPI |                      | `/api/github/content/get`     |
+| updateAPI     |                      | `/api/github/content/update`  |
+| redirectAPI   |                      | `/api/github/auth/user` |
 | clientId      | Github APP client id | {clientId}             |
 |               |                      |                        |
 
