@@ -10,7 +10,8 @@ I am a fork user, and I will be pull request to veaba/vuepress-plugin-editable
 
 ## Install
 
-1. install dep
+install dep:
+
 
 ```sh
 npm install -D vuepress-plugin-editable
