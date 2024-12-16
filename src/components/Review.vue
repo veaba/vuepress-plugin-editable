@@ -153,6 +153,7 @@ export default {
         ...fetchOps,
         headers: new Headers({
           "Access-Token": sessionStorage.githubOAuthAccessToken,
+          'Github-Login': sessionStorage.githubLogin,
           "Content-Type": "Application/json",
         }),
       })
