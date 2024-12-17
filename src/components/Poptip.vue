@@ -18,6 +18,13 @@
         Pull Request
       </a>
     </div>
+    <!-- fork the repo first tip -->
+     <div v-if="!res.success && res?.not_found_repo_link">
+      See:
+      <a :href="res.data && res?.not_found_repo_link" target="_blank">
+        {{res.data?.repo}}
+      </a>
+     </div>
   </div>
 </template>
 <script>
