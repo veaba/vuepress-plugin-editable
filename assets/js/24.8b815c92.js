@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[24],{407:function(t,n,s){"use strict";s.r(n);var e=s(7),o=Object(e.a)({},(function(){var t=this._self._c;return t("ContentSlotsDistributor",{attrs:{"slot-key":this.$parent.slotKey}},[t("p",{attrs:{"data-editable-line":"0"}},[this._v("postman content")])])}),[],!1,null,null,null);n.default=o.exports}}]);
